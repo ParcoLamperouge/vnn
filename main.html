@@ -1,0 +1,251 @@
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Visual Node Network</title>
+	<!-- <link href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous" rel="stylesheet"/> -->
+	<link href="fontawesome-free-5.6.3-web/css/all.css" rel="stylesheet"/>
+	<link href="css/jquery-ui.min.css" rel="stylesheet"/>
+	<link href="css/bootstrap.min.css" rel="stylesheet"/>
+	<link href="css/base.css" rel="stylesheet"/>
+</head>
+<body>
+	<header>
+		<p id="app" v-if="seen" class="web-font">
+		  {{ message }}
+		</p>
+	</header>
+	<div class="row" id="main">
+		<div class="col-sm-3 toolbar-container">
+			<div class="btn-group">
+				<button id="btn-new" v-bind:title="text" type="button" class="btn"  onclick="clearCanvas()">
+					<i class="far fa-file"></i>
+				</button>
+				<button id="btn-loadproject" v-bind:title="text" type="button" class="btn" onclick="loadProject()">
+					<i class="fas fa-upload"></i>
+				</button>
+				<button id="btn-deleteItem" v-bind:title="text" type="button" class="btn" onclick="deleteItem()">
+					<i class="far fa-trash-alt"></i>
+				</button>
+				<button id="btn-save" v-bind:title="text" type="button" class="btn" onclick="save()">
+					<i class="far fa-save"></i>
+				</button>
+				<button id="btn-loadexample" v-bind:title="text" type="button" class="btn" onclick="loadExample()">
+					<i class="fas fa-sitemap"></i>
+				</button>
+				<button id="btn-1" v-bind:title="text" type="button" class="btn" onclick="">
+					<i class="fas fa-mouse-pointer"></i>
+				</button>
+				<button id="btn-2" v-bind:title="text" type="button" class="btn" onclick="">
+					<i class="far fa-keyboard"></i>
+				</button>
+			</div>
+			<!-- fas / far /fab -->
+			<!-- database file code-branch comment codepen indent  table clock info-circle compress-arrows-alt -->
+			<div class='canvas-toolbar row'>
+				<div class="col-sm-3 node-template ele-left" data-template="tpl-datasource">
+					<i class="fas fa-database fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right" data-template="tpl-algrorithm">
+					<i class="fas fa-code-branch fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right" data-template="tpl-comment">
+					<i class="fas fa-comment fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right" data-template="tpl-frame">
+					<i class="fab fa-codepen fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-left ele-bottom" data-template="tpl-table">
+					<i class="fas fa-table fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right ele-bottom" data-template="tpl-timer">
+					<i class="far fa-clock fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right ele-bottom" data-template="tpl-info">
+					<i class="fas fa-info-circle fa-3x"></i>
+				</div>
+				<div class="col-sm-3 node-template ele-right ele-bottom" data-template="tpl-merge">
+					<i class="fas fa-compress-arrows-alt fa-3x"></i>
+				</div>
+			</div>
+			<div class="tablist">
+				<div id="tab-json-edit"
+					class="vnn-tab"
+					v-on:click="select"
+					v-bind:class="{ active: isActive }">
+					<p class="web-font">{{ message }}</p>
+				</div>
+				<div id="tab-node-edit"
+					class="vnn-tab"
+					v-on:click="select"
+					v-bind:class="{ active: isActive }">
+					<p class="web-font">{{ message }}</p>
+				</div>
+			</div>
+			<div id="user-input-content" class="animated">
+				<div id="pad-json-edit" v-show="seen" class="vnn-content">
+					<textarea 
+						id="history-area" 
+						class="text-area col-sm-12" 
+						placeholder="在此输入JSON以生成节点图 / 节点图保存的JSON会在此显示" 
+						spellcheck="false"></textarea>
+				</div>
+				<div id="pad-node-edit" v-show="seen" class="vnn-content">
+					<div class="marker web-font">
+					</div>
+					<div v-for="item in seenItems" class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text">{{item.placeholder}}</span>
+						</div>
+						<input 
+							type="text" 
+							class="form-control"
+							v-bind:id="item.attrName"
+							v-bind:placeholder="item.placeholder"
+							v-bind:value="item.value"
+							v-on:change="change"
+						>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="drag-area col-sm-9" id="drag-area">
+		</div>
+	</div>
+	<footer class="footer">
+        <img alt="image" src="img/logo.png"/>
+        Copyright. All rights reserved
+    </footer>
+</body>
+<script id="tpl-datasource" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="datasource"
+		data-filepath="{{obj.data.filepath}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		<div class="tooltip" v-show="true">{{obj.data.alias}}</div>
+		<i class="fas fa-database fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-algrorithm" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="algrorithm"
+		data-algrorithm="{{obj.data.algrorithm}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		<div class="tooltip" v-show="true">{{obj.data.alias}}</div>
+		<i class="fas fa-code-branch fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-comment" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="comment"
+		data-comment="{{obj.data.comment}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.comment}}
+		<i class="fas fa-comment fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-frame" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="frame"
+		data-frame="{{obj.data.frame}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.frame}}
+		<i class="fab fa-codepen fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-table" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="table"
+		data-table="{{obj.data.table}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.table}}
+		<i class="fas fa-table fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-timer" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="timer"
+		data-timer="{{obj.data.timer}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.timer}}
+		<i class="far fa-clock fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-info" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="info"
+		data-info="{{obj.data.info}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.info}}
+		<i class="fas fa-info-circle fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script id="tpl-merge" type="text/html">
+	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
+		data-type="nodeSelected"
+		data-id="{{id}}"
+		data-nodetype="merge"
+		data-merge="{{obj.data.merge}}"
+		data-alias="{{obj.data.alias}}"
+		style="top:{{top}}px;left:{{left}}px">
+		{{obj.data.merge}}
+		<i class="fas fa-compress-arrows-alt fa-3x" data-type="nodeSelected"></i>
+		<span class="delete-node pull-right">
+			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
+		</span>
+	</div> 
+</script>
+<script src="js/plugins/mustache.min.js"></script>
+<script src="js/plugins/jsplumb.js"></script>
+<script src="js/plugins/vue.js"></script>
+<script src="js/plugins/graphlib.min.js"></script>
+<script src="js/plugins/jquery.min.js"></script>
+<script src="js/plugins/jquery-ui.min.js"></script>
+<script src="js/plugins/bootstrap.min.js"></script>
+<script src="js/plugins/uuid.min.js"></script>
+<script src="js/tool.js"></script>
+<script src="js/data.js"></script>
+<script src="js/config.js"></script>
+<script src="js/vueObjs.js"></script>
+<script src="js/main.js"></script>
