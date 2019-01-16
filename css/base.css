@@ -261,10 +261,9 @@ span.input-group-text{
 }
 .vnn-content{
 	height: calc(100% - 340px);
-	/* height: 100%; */
 	margin: 10px 0 0 0;
 	border: 1px dashed #e5e5e5;
-	padding: 20px;
+	padding: 5px;
 }
 .vnn-content > input{
 	margin: 20px 0 0 0;

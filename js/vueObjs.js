@@ -85,7 +85,7 @@ var tab1 = new Vue({
 	el: '#tab-json-edit',
 	data: {
 		isActive: true,
-		message: '项目JSON数据交互'
+		message: '项目JSON'
 	},
 	methods: {
 		select: function(event, f){
