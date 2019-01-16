@@ -59,3 +59,28 @@ var exampleData = {
 		}
 	]
 }
+var tipsData = {
+    "id": "tipsNode",
+    "name": "tipsNode",
+    "nodeList": [
+        {
+            "id": "tips01",
+            "type": "datasource",
+            "data": {
+                "alias": "data.txt",
+                "filepath": "./file/data.txt",
+                "other": null
+            },
+            "precursorIds": [
+            ],
+            "successorIds": [
+            ],
+            "position": {
+                "top": 44,
+                "left": 37
+            }
+        }
+    ],
+    "connectionList": [
+    ]
+}

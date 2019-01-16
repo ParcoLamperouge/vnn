@@ -62,6 +62,11 @@ vnnConfig.connentionTypes.selected = {
 	hoverPaintStyle:{ stroke:'#4dabf7', strokeWidth: 6 },
 	cssClass:'connector-normal'
 }
+vnnConfig.connentionTypes.highlight = {
+	paintStyle:{ stroke:'#ffc107', strokeWidth: 6  },
+	hoverPaintStyle:{ stroke:'#4dabf7', strokeWidth: 6 },
+	cssClass:'connector-normal'
+}
 
 vnnConfig.nodeDataAttributes = {
 	datasource: [

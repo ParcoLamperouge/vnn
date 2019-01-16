@@ -5,6 +5,18 @@ var autosave = {};
 var node = vnnConfig.node;
 var twinklingCountDown = 50;
 function main() {
+	$("#modal-help").on("show.bs.modal",function(e){
+		modalHelp.initPos();
+	});
+	$("#modal-help").on("hide.bs.modal",function(e){
+		modalHelp.step = 0;
+		forceClear();
+		$(".help-border").removeClass('help-border');
+		$('#json-area').text('');
+		modalHelp.timer.forEach(function(t){
+			clearTimeout(t);
+		})
+	});
 	$('#main').on('click', function(event) {
 		event.stopPropagation();
 		event.preventDefault();
@@ -36,7 +48,8 @@ function main() {
 
 	jsPlumb.registerConnectionTypes({
 		'basic': vnnConfig.connentionTypes.basic,
-		'selected': vnnConfig.connentionTypes.selected
+		'selected': vnnConfig.connentionTypes.selected,
+		'highlight': vnnConfig.connentionTypes.highlight
 	});
 
 	jsPlumb.bind('click', function(conn, originalEvent) {
@@ -49,7 +62,6 @@ function main() {
 			selectedConn.remove(id);
 			conn.removeType('selected');
 		}
-		// btnDeleteConn.seen = selectedConn.length > 0;
 		console.log(selectedConn);
 	});
 	jsPlumb.bind('beforeDrag', function(info) {
@@ -96,12 +108,11 @@ function main() {
 		});
 		return build;
 	});
-	// 	jsPlumb.draggable('obj0', {
-	// 		containment: 'parent'
-	// 	});
 }
-
-// 渲染html
+/* 
+	render methods
+ */
+// render html
 function renderHtml(type, position) {
 	return Mustache.render($('#' + type).html(), position)
 }
@@ -129,7 +140,7 @@ function addEndpoint(id) {
 }
 
 function dropNode(template, position) {
-	position.left -= $('.canvas-toolbar').outerWidth();
+	position.left -= $('.canvas-elementbar').outerWidth();
 	position.top -= $('.web-font').outerHeight();
 	position.id = uuid.v1();
 	position.generateId = uuid.v1;
@@ -144,6 +155,16 @@ function initNode(template, id) {
 		containment: 'parent'
 	});
 	addEndpoint(id);
+}
+
+/* 
+	user interact methods
+ */
+function previousTips(){
+	modalHelp.previousTips();
+}
+function nextTips(){
+	modalHelp.nextTips();
 }
 
 function addConnection(sourceId, targetId) {
@@ -198,6 +219,9 @@ function editNode(item){
 		target = event.target;
 	}else if(event.target.parentElement.classList.contains('node-clone')){
 		target = event.target.parentElement;
+	}
+	if(item){
+		target = item;
 	}
 	var id = target.id,
 		data = target.dataset;
@@ -283,13 +307,7 @@ function clearCanvas(str) {
 			str = '确定清空已有内容？';
 		}
 		if (window.confirm(str)) {
-			jsPlumb.deleteEveryEndpoint();
-			jsPlumb.deleteEveryConnection();
-			var clearNodeList = $(".node-clone");
-			for (var i = 0; i < clearNodeList.length; i++) {
-				clearNodeList[i].remove();
-			}
-			selectedConn = [];
+			forceClear();
 			return true;
 		}else{
 			return false;
@@ -299,9 +317,19 @@ function clearCanvas(str) {
 	}
 }
 
+function forceClear(){
+	jsPlumb.deleteEveryEndpoint();
+	jsPlumb.deleteEveryConnection();
+	var clearNodeList = $(".node-clone");
+	for (var i = 0; i < clearNodeList.length; i++) {
+		clearNodeList[i].remove();
+	}
+	selectedConn = [];
+}
+
 function loadProject() {
 	tab1.select();
-	var projectData = $('#history-area')[0].value;
+	var projectData = $('#json-area')[0].value;
 	if (projectData) {
 		clearCanvas();
 		var projectData = JSON.parse(projectData.trim());
@@ -326,6 +354,10 @@ function save() {
 	tab1.select(event, saveData);
 	return;
 }
+
+/* 
+	hidden method	
+ */
 function generateSaveData(projectName){
 	var nodes = $('.node-clone');
 	var conns = jsPlumb.getAllConnections();

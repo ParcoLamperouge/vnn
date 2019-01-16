@@ -10,13 +10,14 @@
 </head>
 <body>
 	<header>
-		<p id="app" v-if="seen" class="web-font">
+		<p id="app" v-if="seen" class="web-font title">
 		  {{ message }}
 		</p>
 	</header>
+	<img class="icon-help" src="svg/diaodeng.svg"  data-toggle="modal" data-target="#modal-help"/>
 	<div class="row" id="main">
 		<div class="col-sm-3 toolbar-container">
-			<div class="btn-group">
+			<div class="canvas-toolbar btn-group">
 				<button id="btn-new" v-bind:title="text" type="button" class="btn"  onclick="clearCanvas()">
 					<i class="far fa-file"></i>
 				</button>
@@ -38,7 +39,7 @@
 			</div>
 			<!-- fas / far /fab -->
 			<!-- database file code-branch comment codepen indent  table clock info-circle compress-arrows-alt -->
-			<div class='canvas-toolbar row'>
+			<div class="canvas-elementbar row">
 				<div class="col-sm-3 node-template ele-left" data-template="tpl-datasource">
 					<i class="fas fa-database fa-3x"></i>
 				</div>
@@ -81,7 +82,7 @@
 			<div id="user-input-content" class="animated">
 				<div id="pad-json-edit" v-show="seen" class="vnn-content">
 					<textarea 
-						id="history-area" 
+						id="json-area" 
 						class="text-area col-sm-12" 
 						placeholder="在此输入JSON以生成节点图 / 节点图保存的JSON会在此显示" 
 						spellcheck="false"></textarea>
@@ -112,6 +113,27 @@
         <img alt="image" src="img/logo.png"/>
         Copyright. All rights reserved
     </footer>
+	
+	<div class="modal fade" id="modal-help" aria-hidden="true" data-backdrop="static">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<!-- 模态框头部 -->
+				<div class="modal-header">
+					<h4 class="modal-title web-font title">{{title}}</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+				<!-- 模态框主体 -->
+				<div class="modal-body web-font">
+					{{message}}
+				</div>
+				<!-- 模态框底部 -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" v-if="step > 1" onclick="previousTips()">Previous tips</button>
+					<button type="button" class="btn btn-warning" v-if="step < max" onclick="nextTips()">Next tips</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 <script id="tpl-datasource" type="text/html">
 	<div id="{{id}}" class="drag-ele node-clone" ondblclick="editNode()" onclick="selectNode()"
@@ -121,7 +143,7 @@
 		data-filepath="{{obj.data.filepath}}"
 		data-alias="{{obj.data.alias}}"
 		style="top:{{top}}px;left:{{left}}px">
-		<div class="tooltip" v-show="true">{{obj.data.alias}}</div>
+		<!-- <div class="vnn-tooltip" v-show="true">{{obj.data.alias}}</div> -->
 		<i class="fas fa-database fa-3x" data-type="nodeSelected"></i>
 		<span class="delete-node pull-right">
 			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>
@@ -136,7 +158,7 @@
 		data-algrorithm="{{obj.data.algrorithm}}"
 		data-alias="{{obj.data.alias}}"
 		style="top:{{top}}px;left:{{left}}px">
-		<div class="tooltip" v-show="true">{{obj.data.alias}}</div>
+		<!-- <div class="vnn-tooltip" v-show="true">{{obj.data.alias}}</div> -->
 		<i class="fas fa-code-branch fa-3x" data-type="nodeSelected"></i>
 		<span class="delete-node pull-right">
 			<i class="fas fa-times" data-type="deleteNode" data-id="{{id}}"></i>

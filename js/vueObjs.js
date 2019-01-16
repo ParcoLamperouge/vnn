@@ -5,6 +5,138 @@ var app = new Vue({
 		message: '通过操作节点模拟数学模型建立'
 	}
 });
+var modalHelp = new Vue({
+	el: '#modal-help',
+	data: {
+		step: 0,
+		max: 6,
+		padding: 40,
+		title: '提示',
+		message: 'Welcome',
+		content: [
+			'点击按钮观看提示',
+			'1.工具栏： 点击可分别进行新建画布、通过JSON加载模型、删除元素、保存JSON、展示样例等操作',
+			'2.节点栏： 拖拽节点至右边的画布即可新建该类型的节点',
+			'3.画布区域',
+			'4.拖拽元素的右节点拉出曲线，可连接至其他元素的左节点',
+			'5.填入之前保存的JSON,点击按钮加载项目',
+			'6.节点单击可进入选中状态，再点一次恢复;双击可进行编辑'
+		],
+		timer: []
+	},
+	methods: {
+		initPos: function(){
+			$(".modal-dialog").css('position', 'relative');
+			$(".modal-dialog").css('left', 'auto');
+			$(".modal-dialog").css('right', 'auto');
+			this.step = 0;
+			this.message = this.content[this.step];
+		},
+		previousTips: function(){
+			if(this.step > 1){
+				this.step -= 1;
+			}
+			this.showStep();
+		},
+		nextTips: function(){
+			if(this.step < this.max){
+				this.step += 1;
+			}
+			this.showStep();
+		},
+		showStep: function(){
+			var p = this.padding;
+			this.message = this.content[this.step];
+			$(".help-border").removeClass('help-border');
+			switch(this.step){
+				case 1: {
+					$(".canvas-toolbar").addClass('help-border');
+					$(".modal-dialog").css('position', 'absolute');
+					$(".modal-dialog").css('top', $(".canvas-toolbar").position().top + p);
+					$(".modal-dialog").css('left', $(".canvas-toolbar").width() + p);
+					break;
+				}
+				case 2: {
+					forceClear();
+					$(".canvas-elementbar").addClass('help-border');
+					$(".modal-dialog").css('top', $(".canvas-elementbar").position().top + p);
+					$(".modal-dialog").css('right', 'auto');
+					$(".modal-dialog").css('left', $(".canvas-elementbar").width() + p);
+					break;
+				}
+				case 3: {
+					forceClear();
+					loadExample();
+					this.timer.forEach(function(t){
+						clearTimeout(t);
+					})
+					$(".drag-area").addClass('help-border');
+					$(".modal-dialog").css('top', $(".drag-area").position().top);
+					$(".modal-dialog").css('left', 'auto');
+					$(".modal-dialog").css('right', p);
+					break;
+				}
+				case 4: {
+					$(".modal-dialog").css('top', $(".drag-area").position().top);
+					$(".modal-dialog").css('left', 'auto');
+					$(".modal-dialog").css('right', p);
+					forceClear();
+					loadExample();
+					this.timer.forEach(function(t){
+						clearTimeout(t);
+					})
+					$('#json-area').text('');
+					jsPlumb.getEndpoints('01')[1].canvas.style.border = '4px solid #ffc107';
+					jsPlumb.getEndpoints('02')[0].canvas.style.border = '4px solid #ffc107';
+					var a = setTimeout(function(e){
+						jsPlumb.getAllConnections()[0].addType('highlight');
+					}, 1000);
+					this.timer.push(a);
+					var b = setTimeout(function(e){
+						jsPlumb.getAllConnections()[1].addType('highlight');
+					}, 2000);
+					this.timer.push(b); 
+					break;
+				}
+				case 5: {
+					forceClear();
+					tab1.select();
+					this.timer.forEach(function(t){
+						clearTimeout(t);
+					})
+					$("#user-input-content").addClass('help-border');
+					$(".modal-dialog").css('top', $("#user-input-content").position().top + p);
+					$(".modal-dialog").css('right', 'auto');
+					$(".modal-dialog").css('left', $("#user-input-content").width() + p);
+					var a = setTimeout(function(e){
+						$('#json-area').text(formatJson(tipsData));
+					}, 1000)
+					this.timer.push(a);
+					var b = setTimeout(function(e){
+						$(".help-border").removeClass('help-border');
+						$("#btn-loadproject").addClass('help-border');
+					}, 2000);
+					this.timer.push(b); 
+					var c = setTimeout(function(e){
+						loadProject();
+						$("#tips01").addClass('help-border');
+					}, 3000);
+					this.timer.push(c); 
+					break;
+				}
+				case 6: {
+					tab2.select();
+					$("#tips01").addClass('help-border');
+					editNode($("#tips01")[0]);
+					$("#user-input-content").addClass('help-border');
+					$(".modal-dialog").css('top', $("#user-input-content").position().top + p);
+					$(".modal-dialog").css('left', $("#user-input-content").width() + p);
+					break;
+				}
+			}
+		}
+	}
+})
 //btn - group
 var btnClear = new Vue({
 	el: '#btn-new',
@@ -71,10 +203,10 @@ var pad2 = new Vue({
 		change: function(event){
 			var ele = $('#' + this.bindEleId)[0];
 			ele.setAttribute('data-' + event.target.id, event.target.value);
-			var content = $('#' + this.bindEleId + ' > .tooltip')[0];
-			if(event.target.id == 'alias'){
-				content.innerHTML = event.target.value;
-			}
+// 			var content = $('#' + this.bindEleId + ' > .vnn-tooltip')[0];
+// 			if(event.target.id == 'alias'){
+// 				content.innerHTML = event.target.value;
+// 			}
 		},
 		clearList: function(){
 			this.seenItems = [];
