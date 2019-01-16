@@ -168,6 +168,7 @@ footer > img{
 .btn-group > button:hover{
 	color: #4dabf7;
 }
+
 .btn-group > button > i{
 	zoom: 1.5;
 }
@@ -179,6 +180,23 @@ span.input-group-text{
 	height: auto;
 	width: 100%;
 	border: 2px dashed #e5e5e5;
+}
+@media only screen and (max-width: 1300px){
+	.btn-group > button{
+		padding: 6px 6px;
+	}
+	.btn-group > button > i{
+		zoom: 1;
+	}
+	.node-template{
+		padding-top: 13px !important;
+	}
+	.web-font{
+		font-size: 12px;
+	}
+	.web-font > i.fa-3x, .node-template > i.fa-3x{
+		zoom: 0.8;
+	}
 }
 .node-template{
 	margin: 0;
@@ -194,6 +212,7 @@ span.input-group-text{
 	background-color: #4dabf7;
 	color: #f2f2f2;
 }
+
 .drag-ele{
 	color: #666;
 	text-align: center;
@@ -263,7 +282,6 @@ span.input-group-text{
 	height: calc(100% - 340px);
 	margin: 10px 0 0 0;
 	border: 1px dashed #e5e5e5;
-	padding: 5px;
 }
 .vnn-content > input{
 	margin: 20px 0 0 0;
@@ -296,6 +314,12 @@ span.input-group-text{
 .vnn-content > input::-webkit-input-placeholder
 {
     text-align: right;
+}
+#pad-json-edit{
+	padding: 5px;
+}
+#pad-node-edit{
+	padding: 20px;
 }
 .marker{
 	margin-bottom: 20px;
