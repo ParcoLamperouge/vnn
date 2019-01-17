@@ -128,8 +128,8 @@
 				</div>
 				<!-- 模态框底部 -->
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" v-if="step > 1" onclick="previousTips()">Previous tips</button>
-					<button type="button" class="btn btn-warning" v-if="step < max" onclick="nextTips()">Next tips</button>
+					<button type="button" class="btn btn-secondary" v-bind:disabled="step <= 1" onclick="previousTips()">Previous tips</button>
+					<button type="button" class="btn btn-warning" v-bind:disabled="step >= max" onclick="nextTips()">Next tips</button>
 				</div>
 			</div>
 		</div>

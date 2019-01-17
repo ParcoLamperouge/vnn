@@ -48,6 +48,9 @@ var modalHelp = new Vue({
 			var p = this.padding;
 			this.message = this.content[this.step];
 			$(".help-border").removeClass('help-border');
+			this.timer.forEach(function(t){
+				clearTimeout(t);
+			})
 			switch(this.step){
 				case 1: {
 					$(".canvas-toolbar").addClass('help-border');
@@ -67,9 +70,6 @@ var modalHelp = new Vue({
 				case 3: {
 					forceClear();
 					loadExample();
-					this.timer.forEach(function(t){
-						clearTimeout(t);
-					})
 					$(".drag-area").addClass('help-border');
 					$(".modal-dialog").css('top', $(".drag-area").position().top);
 					$(".modal-dialog").css('left', 'auto');
@@ -82,9 +82,6 @@ var modalHelp = new Vue({
 					$(".modal-dialog").css('right', p);
 					forceClear();
 					loadExample();
-					this.timer.forEach(function(t){
-						clearTimeout(t);
-					})
 					$('#json-area').text('');
 					jsPlumb.getEndpoints('01')[1].canvas.style.border = '4px solid #ffc107';
 					jsPlumb.getEndpoints('02')[0].canvas.style.border = '4px solid #ffc107';
@@ -101,9 +98,6 @@ var modalHelp = new Vue({
 				case 5: {
 					forceClear();
 					tab1.select();
-					this.timer.forEach(function(t){
-						clearTimeout(t);
-					})
 					$("#user-input-content").addClass('help-border');
 					$(".modal-dialog").css('top', $("#user-input-content").position().top + p);
 					$(".modal-dialog").css('right', 'auto');
@@ -125,6 +119,9 @@ var modalHelp = new Vue({
 					break;
 				}
 				case 6: {
+					forceClear();
+					$('#json-area').text(formatJson(tipsData));
+					loadProject();
 					tab2.select();
 					$("#tips01").addClass('help-border');
 					editNode($("#tips01")[0]);
@@ -226,7 +223,7 @@ var tab1 = new Vue({
 			tab1.isActive = true;
 			tab2.isActive = false;
 			if(f)
-			$('#history-area')[0].value = f ;
+			$('#json-area')[0].value = f ;
 		}
 	}
 });
