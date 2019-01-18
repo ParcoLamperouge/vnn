@@ -29,6 +29,7 @@ var modalHelp = new Vue({
 			$(".modal-dialog").css('position', 'relative');
 			$(".modal-dialog").css('left', 'auto');
 			$(".modal-dialog").css('right', 'auto');
+			$(".modal-dialog").css('top', '20%');
 			this.step = 0;
 			this.message = this.content[this.step];
 		},

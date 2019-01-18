@@ -386,7 +386,11 @@ span.input-group-text{
 .vnn-tootip{
 	display: none;
 }
-
+.modal-dialog{
+	top: 20%;
+	left: auto;
+	right: auto;
+}
 /* 
  以下是没有用到的代码
  */
